@@ -1,0 +1,74 @@
+아래는 Udemy의 Ultimate AWS Certified Solutions Architect Associate SAA-C03 강의내용 중 Section 4.
+
+11 - 29강을 요약한 내용입니다.(Section 4. IAM & AWS CLI )
+
+
+
+1. IAM: Users & Groups
+
+1.1. IAM : Identity and Access Management, 글로벌 서비스임
+
+1.2. 루트 계정이 디폴트로 생성됨 (*루트 계정은 사용자 계정들을 셋업하는 용도로만 사용하는 것이 권장됨)
+
+1.3. 조직 내에서 사용하기 위한 사용자 계정들을 루트 계정 외로 생성할 수 있음
+
+1.4. 그룹은 사용자 계정들을 포함하고 다른 그룹을 포함할 수는 없음
+
+1.5. 사용자 계정은 반드시 그룹에 포함되야 하는 것은 아니며 다수의 그룹에 동시에 포함될 수 있음
+
+
+
+2. IAM: Permissions
+
+2.1. 사용자 계정들이나 그룹들은 Policy라고 하는 JSON 문서를 할당받을 수 있음
+
+2.2. Policy는 사용자들에게 부여된 Permition들을 정의함
+
+2.3. Policy는 최소한의 권한을 부여하는 것이 원칙임
+
+
+
+3. IAM Policies Structure
+
+3.1. Policy는 Version, Id, Statement으로 구성됨
+
+3.2. Statement는 Sid, Effect, Principal, Action, Resouece, Condition으로 구성됨
+
+
+
+4. Multi Factor Authentication - MFA
+
+4.1. MFA는 사용자가 소유한 보안 장치를 사용해 인증하는 것임
+
+4.2. 비밀번호를 해킹당해도 계정을 보호할 수 있음 (*사용자 계정의 보안을 강화함)
+
+
+
+5. How can users access AWS?
+5.1. AWS Management Console : 패스워드 + MFA
+
+5.2. AWS Command Line Interface (CLI) : access key들로 보호됨
+
+5.2.1. 커맨드 라인 쉘에서 AWS 서비스를 사용
+
+5.3. AWS Software Developer Kit (SDK) : access key들로 보호됨
+
+5.3.1. 라이브러리의 집합이고 프로그램적으로 AWS 서비스를 사용
+
+
+
+6. IAM Roles for Services
+
+6.1. 사용자가 직접 수행하는 것 외 AWS서비스 자체가 수행하는 액션들에 대해 Permitions를 부여함
+
+
+
+7. IAM Security Tools
+
+7.1. IAM Credentials Report (account-level)
+
+7.1.1. 루트 계정과 모든 사용자 계정들의 다양한 크레덴셜 상태들의 목록
+
+7.2. IAM Access Advisor (user-level)
+
+7.2.1. 계정에게 부여된 permition들에 대한 Access Advisor들과 그 서비스들이 마지막으로 접근된 정보를 제공
