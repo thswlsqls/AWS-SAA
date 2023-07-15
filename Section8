@@ -1,0 +1,281 @@
+아래는 Udemy의 Ultimate AWS Certified Solutions Architect Associate SAA-C03 강의내용 중 Section 8.
+
+69 - 86강을 요약한 내용입니다.(Section 8. High Availability and Scalability: ELB & ASG)
+
+
+
+1. Scalability & High Availability
+
+1.1. Scalability란 어플리케이션이나 시스템이 대규모의 부하를 처리하는 것을 의미
+
+1.1.1. Vertical Scalability
+
+인스턴스의 사이즈를 증강 (스케일 업, 스케일 다운)
+
+데이터베이스 같은 비분산 시스템에서 사용되는 방식
+
+RDS, 일라스틱 캐시는 수직 스케일링이 가능
+
+
+
+1.1.2. Horizonral Scalability
+
+인스턴스나 시스템의 개수를 늘림 (스케일 아웃, 스케일 인)
+
+분산 시스템에 사용함
+
+웹 어플리케이션이나 현대 어플리케이션에 사용됨
+
+아마존 EC2같은 클라우드를 사용하면 쉽게 적용 가능함
+
+데이터 센터 손실에 의한 피해를 대응하기위한 목적
+
+오토 스케일링 그룹과 로드밸랜서를 통해 적용 가능함
+
+
+
+2. Load Balancer
+
+2.1. What is load balancing?
+
+로드 밸런스들은 다수의 트래픽을 다수의 서버(인스턴스)로 보내는 서버들임
+
+
+
+2.2. Why use a load balancer?
+다수의 다운스트림 인스턴스들에 로드를 분산함
+
+애플리케이션에 접근하는 하나의 DNS를 노출함
+
+다운스트림 인스턴스들의 장애상황에 대응함
+
+인스턴스들에 대해 정기적으로 헬스체크를 함
+
+웹사이트에 SSL 종단점을 제공함 (HTTPS)
+
+쿠키들에 대해 스티키니스를 강제함
+
+영역들에 걸쳐서 고가용성을 제공함
+
+프라이빗 트래픽으로부터 퍼블릭 트래픽을 분리함
+
+
+
+2.3. Why use an Elastic Load Balancer?
+ELB 는 AWS에서 관리하는 로드 밸런서임.
+
+EC2, EC2 Auto Scailing Groups, ECS, ACM, CloudWatch, Route53, WAF, Global Accelerator 등의 AWS 서비스들과 통합이 가능함.
+
+
+
+2.4. Health Checks
+
+인스턴스들이 트래픽을 보내고 응답을 받는 것에 문제가 없는지 로드 밸런서가 알게 함.
+
+응답코드가 200이 아니면 인스턴스는 unhealty 상태임.
+
+
+
+2.5. Types of load balancer on AWS
+
+2.5.1. Classic Load Balancers (v1)
+
+TCP, HTTP, HTTPS를 지원함.
+
+헬스 체크는 TCP 또는 HTTP 기반임.
+
+고정된 호스트네임을 제공함.
+
+
+
+2.5.2. Application Load Balancer (v2)
+
+HTTP/2 와 웹소켓을 지원함.
+
+HTTP를 HTTPS으로 리다이렉트하는 것을 지원함.
+
+URL, 호스트명, 쿼리스트링, 헤더 등을 기반으로 라우팅함.
+
+마이크로 서비스 아키텍처나 컨테이너 기반 어플리케이션에 적합함.
+
+타깃 그룹으로 EC2 인스턴스들, ECS 태스크들, 람다함수, IP주소 등을 가짐.
+
+고정된 호스트네임을 제공함.
+
+클라이언트의 IP를 직접 제공하지 않고 X-Forwarded-For 헤더를 통해 전달함.
+
+X-Forwarded-Port, X-Forwarded-Proto 를 통해 포트번호롸 프로토를 전달함.
+
+
+
+2.5.3. Network Load Balancer (v2)
+
+TCP & UDP 트래픽을 인스턴스로 전달함.
+
+낮은 지연으로 초당 수백만건 요청을 처리함.
+
+각각의 AZ마다 하나의 static IP를 가지고 Elastic IP를 할당할 수 있음.
+
+타깃 그룹으로 EC2 인스턴스들, IP 주소들, 어플리케이션 로드 밸런서를 가짐.
+
+헬스체크로 TCP, HTTP, HTTPS 프로토콜을 지원함.
+
+
+
+2.5.4. Gateway Load Balancer
+
+서드파티 네트워크 가상 기기들의 모음을 관리하고 스케일하고 배포함.
+
+3계층 IP패킷에서 작동함.
+
+
+
+2.6. Sticky Sessions - Cookie Names
+
+어플리케이션 기반 쿠키들로 기본 제공되는 쿠키명들 외에 커스텀 쿠키를 사용할 수 있음.
+
+로드밸런서에 의해 생성되는 쿠키가 있음.
+
+
+
+2.7. Cross-Zone Load Balancing
+
+모든 AZ에 있는 인스턴스들에게 균등하게 부하를 전달함.
+
+크로스존 로드 밸런싱이 없으면, 각각의 ELB 노드별로 인스턴스들에게 균등하게 부하를 전달함.
+
+ALB에서는 기본값으로 크로스존 로드 밸런싱을 제공함.
+
+NLB, CLB에서는 기본값으로 제공하지 않음.
+
+
+
+2.8. SSL/TLS 기본
+
+SSL 인증서는 클라이언트와 로드밸런서 사이에 트래픽이 암호화되도록 함.
+
+SSL은 Secure Sockets Layer를 나타내고 TLS는 Transport Layer Security를 나타냄.
+
+퍼블릭 SSL 인증서들은 Certificate Authorities(CA) 에 의해 발행됨
+
+SSL 인증서들은 만료일이 있고 갱신되어야 함.
+
+
+
+2.8.1. 로드밸런서의 SSL 인증서들 
+
+ACM을 통해 인증서들을 관리할 수 있음.
+
+로드밸런서의 HTTPS 리스너에 기본 인증서를 등록해야 함.
+
+다수에 도메인에 대해 인증서 목록을 추가할 수 있음.
+
+
+
+2.8.2. Server Name Indication (SNI)
+
+다수개의 SSL을 로딩하는 문제를 해결함.
+
+클라이언트가 호스트네임을 명시해야 함.
+
+서버가 적합한 인증서를 찾아서 돌려줄 수 있음.
+
+ALB와 NLB에서만 동작함.
+
+
+
+2.8.3. Elastic Load Balancers - SSL Certificaties
+
+Class Load Balancer (v1) - 한개의 SSL 인증서만을 지원
+
+Applications Load Balancer (v2) - SNI를 통해 다수개의 SSL 인증서를 다수개의 리스너와 함께 지원
+
+Network Load Balancer (v2) - SNI를 통해 다수개의 SSL 인증서를 다수개의 리스너와 함께 지원
+
+
+
+2.9. Connection Draining
+
+인스턴스가 비등록 상태이거나 언헬시 상태인 동안 in-fligt request를 완료하는 것까지 걸리는 시간임.
+
+비등록 상태의 EC2에 새로운 요청을 보내는 것을 멈춤.
+
+1에서 3600초 사이임.
+
+디스에이블 될 수 있음.
+
+만약 요청이 짧으면 낮은 값을 세팅함.
+
+
+
+3. Auto Scailing Group
+
+3.1. What is an Auto Scailing Group?
+
+실세계에서, 웹사이트와 어플리케이션에 대한 로드는 변할 수 있음.
+
+클라우드에서, 매우 빠르게 서버를 생성하고 삭제할 수 있음.
+
+ASG의 목적은 증가된 로드에 맞춰 스케일 아웃하고,
+
+줄어든 로드에 맞춰 스케일 인하고,
+
+최소 혹은 최대 개수의 EC2 인스턴스가 실행되도록 하고,
+
+새로운 인스턴스를 로드 밸런서에 자동으로 등록하고,
+
+앞선 인스턴스가 종료된 경우에 새로운 인스턴스를 재생성하는 것임.
+
+ASG는 무료 서비스이므로 EC2 인스턴스들에 대한 비용만 지불함.
+
+
+
+3.2. Auto Scailing - CloudWatch Alarms & Scailing
+
+클라우드워치 알람에 기반해서 ASG를 스케일 가능.
+
+알람은 CPU나 커스텀 메트릭에 의해 모니터링됨.
+
+평균 CPU같은 메트릭들은 전체 ASG 인스턴스들에 대해 컴퓨트됨
+
+
+
+3.3. Auto Scailing Groups - Dynamic Scailing Policies
+
+3.3.1. Target Tracking Scailing
+
+가장 단순하고 쉽게 셋업함.
+
+예를 들어, 평균 ASG CPU를 약 40%으로 유지하는 것임.
+
+3.3.2. Simple / Step Scaling
+
+클라우드워치 알람이 트리거되는 경우 스케일 인, 아웃함.
+
+3.3.3. Scheduled Actions
+
+알려진 사용 패턴에 기반해 스케일링을 예측함.
+
+예를 들어, 금요일 10시부터 5시사이에 최소 용량을 증강하는 것임.
+
+
+
+3.4. Auto Scaling Groups - Predictive Scaling
+
+지속적으로 로드와 스케줄 스케일링을 미리 예측함.
+
+
+
+3.5. Good metrics to scale on
+
+CPU 사용량, 타깃당 요청수, 네트워크 그리고 커스텀 메트릭 등등
+
+
+
+3.6. Auto Scaling Groups - Scaling Gooldowns
+
+스케일링 활동이 일어난 후에, 쿨다운 기간이 있음. (기본 300초)
+
+쿨다운 기간 동안, ASG는 추가적인 인스턴스를 런칭하거나 종료하지 않음.
+
+요청을 빠르게 전달하거나 쿨다운 기간을 줄이기 위해 미리 준비된 AMI를 사용할 수 있음.
