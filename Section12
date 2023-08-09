@@ -101,3 +101,66 @@ Same-Region Replication : 로그 집합, 운영과 테스트 계정 사이의 �
 버전 ID와 함께 삭제된 것들은 복제되지 않음.
 
 복제에 대한 캐싱은 없음.
+
+
+
+8. Amazon S3 Storage Classes
+
+8.1. S3 Standard - General Purpose
+
+99.99% 사용 가능함.
+
+빈번하게 접근하는 데이터에 대해 사용함.
+
+낮은 지연과 높은 처리량.
+
+2개의 경쟁 시설 실패들을 유지함.
+
+빅데이터 분석, 모바일&게임 앱, 콘텐츠 분산 등에 사용됨.
+
+
+
+8.2. Storage Classes - Infrequent Access
+
+덜 빈번하게 접근하는 데이터에 대해 사용함. 그러나 필요시 빠른 접근을 요구함.
+
+S3 Standard 보다 비용이 낮음.
+
+S3 Standard-Infrequent Acssess - 99.9% 사용 가능하고 재해 복구, 백업용으로 사용함.
+
+S3 One Zone-Infrequent Access - 단일 리전 내에서 99.999999999% 높은 내구성을 가지고 AZ가 파괴되었을 때 데이터 손실됨. 99.5% 이용 가능하고 온피로미스 데이터의 두번째 백업을 저장하는 등의 용도로 사용함.
+
+
+
+8.3. Amazon S3 Glacier Storage Classes
+
+아카이빙과 백업을 위한 낮은 비용의 오브젝트 저장소를 의미함.
+
+스토리지용 비용과 오브젝트 검색 비용이 청구됨.
+
+Amazon S3 Glacier Instance Retrieval - 밀리세컨드 검색, 최소 90일의 저장소 지속
+
+Amazon S3 Glacier Flexible Retrieval - 1에서 5분은 Expedited, 3에서 5시간은 Standard, 5에서 12시간은 Bulk임.
+
+Amazon S3 Glacier Deep Archive - for long term storage - 12시간은 Standard, 48시간은 Bulk임. 최소 180일의 저장소 지속.
+
+
+
+9. S3 Intelligent - Tiering
+
+작은 월간 모니터링과 자동 계층과 요금.
+
+오브젝트들은 사용에 기반한 접근 계층들 사이에서 자동으로 이동시킴.
+
+검색 비용은 청구되지 않음.
+
+Frequent Access tier - 기본 티어
+
+Infrequent Access tier - 30일동안 접근하지 않은 오브젝트들임.
+
+Archive Instance Access tier - 90일동안 접근하지 않은 오브젝트들임.
+
+Archive Access tier - 90일에서 700일 이상까지 설정 가능함.
+
+Deep Archive Access tier - 180일에서 700일 이상까지 설정 가능함.
+
