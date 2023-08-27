@@ -1,0 +1,214 @@
+아래는 Udemy의 Ultimate AWS Certified Solutions Architect Associate SAA-C03 강의내용 중 Section 14.
+
+148 - 162강을 요약한 내용입니다.(Section 14. Amazon S3 Security)
+
+
+
+1. Amazon S3 - Object Encryption
+
+S3 버킷들 안에 있는 오브젝트들을 암호화하는 방법은 4가지임.
+
+첫째, Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) - 기본값으로 가능함. AWS에 의해 소유되고, 관리되고 다루어지는 키들을 사용해 S3 오브젝트들을 암호화함.
+
+둘째, Server-Side Encryption with KMS Keys stored in AWS KMS (SSE-KMS) - 암호화 키들을 관리하기 위해 AWS 키 관리 서비스를 레버리지 함.
+
+셋째, Server-Side Encryption with Customer-Provided Keys (SSE-C) - 당신의 암호화 키들을 관리하기 원할 떄 사용함.
+
+넷째, Client-Side Encryption
+
+시험에서는 어떤 상황에 어떤 암호화 방법을 사용하는가를 이해하는 것이 중요함.
+
+
+
+2. Amazon S3 Encryption
+
+2.1. SSE-S3
+
+AWS에 의해 소유되고 관리되고 다루어지는 키들을 사용한 암호화임.
+
+server-side에서 오브젝트들이 암호화됨.
+
+암호화 타입은 AES-256임.
+
+x-amz-server-side-encryption : AES256 헤더를 세팅해야 함.
+
+새로운 버킷들과 새로운 오브젝트들에 대해 기본값으로 가능함.
+
+
+
+2.2. SSE-KMS
+
+AWS KMS에 의해 관리되고 다루어지는 키들을 사용한 암호화임.
+
+사용자 제어와 CloudTrail을 사용한 키 심사의 이점이 있음.
+
+오브젝트들이 서버 사이드에서 암호화됨.
+
+x-amz-server-side-encryption : aws:kms 헤더를 세팅해야 함.
+
+
+
+2.2.1.. SSE-KMS Limitation
+
+당신이 SSE-KMS를 사용하면, 당신은 아마도 KMS limits에 의해 영향을 받을 수 있음.
+
+당신이 업로드할 때, 그것은 GenerateDataKey KMS API를 호출함.
+
+당신이 다운로드할 때, 그것은 Decrypt KMS API를 호출함.
+
+매초마다 KMS 할당량을 카운트함. (리전에 기반해 초당 5500, 10000, 30000 요청)
+
+서비스 할당량 콘솔을 사용해 할당량을 증가시키도록 요청할 수 있음.
+
+
+2.3. SSE-C
+
+AWS의 외부 고객에 의해 완전히 관리되는 키들을 사용한 서버 사이드 암호화임.
+
+Amazon S3는 당신이 제공하는 암호화 키를 저장하지 않음.
+
+HTTPS는 사용되어야 함.
+
+암호화 키는 HTTP 헤더들에 제공되야 하고 모든 HTTP 요청들이 만들어져야 함.
+
+
+
+2.4. Client-Side Encryption
+
+Amazon S3 Client-Side Encryption Library 같은 클라이언트 라이브러리들을 사용함.
+
+클라이언트들은 반드시 아마존 S3으로 전송하기 전에 데이터 그들 자신을 암호화 해야 함.
+
+클라이언트들은 반드시 Amazon S3으로부터 검색할 때 데이터 그들 자신을 복호화 해야 함.
+
+고객은 그 키들과 암호화 사이클을 완전히 관리해야 함.
+
+
+
+3. Amazon S3 - Encryption in transit (SSL/TLS)
+
+Encryption in flignt는 또한 SSL/TLS 라고도 불림.
+
+Amazon S3는 다음 두개의 엔드포인트들을 노출함.
+
+첫째, HTTP Endpoint - non encrypted, 둘째, HTTPS Endpoint - encryption in flight.
+
+HTTPS 는 추천되어짐. SSE-C에서 강요되어짐.
+
+대부분의 클라이언트들은 기본값으로 HTTPS endpoint를 사용함.
+
+
+
+4. Amazon S3 - Default Encryption vs. Bucket Polices
+
+SSE-S3 암호화는 자동적으로 S3 버킷 내에 저장된 새로운 오브젝트들에게 적용됨.
+
+선택적으로, 버킷 정책을 사용해 암호화를 강제할 수 있고 암호화 헤더 없이 S3 오브젝트를 put하는 어떤 API 요청들도 거절할 수 있음.
+
+버킷 정책들은 기본 암호화 이전에 평가되어짐.
+
+
+
+5.  What is CORS?
+
+Cross- Origin Resource Sharing (CORS)
+
+Origin은 scheme (protocol) + host(domain) + port 임.
+
+웹 브라우저는 메인 오리진을 방문하는 동안 다른 오리진들에 대한 요청을 허용하는 매커니즘을 기반으로 함.
+
+CORS 헤더들을 사용하면서 다른 오리진이 그 요청들을 허용하지 않는 한, 그 요청들은 수행되지 않음.
+
+
+
+6. Amazon S3 - CORS
+
+만약 클라이언트가 cross-origin 요청을 S3 버킷에 대해 만들면, 올바른 CORS 헤더들을 가능하게 해야 함.
+
+특적한 오리진 혹은 모든 오리진들에 대해 허용할 수 있음.
+
+예를 들어, Access-Control-Allow-Origin: [특정 오리진] | [*]
+
+
+
+7. Amazon S3 - MFA Delete
+
+MFA(Multi-Factor Authentication)은 S3에 대한 주요 작업을 하기 전에 먼저 사용자들이 핸드폰이나 하드웨어 등의 장치에 코드를 생성하도록 강요함.
+
+MFA는 영구적으로 오브젝트 버전을 삭제하는 것, 버킷의 버저닝을 연기하는 것에 요구됨.
+
+MFA는 버저닝을 가능하게 하거나 삭제된 버전을 리스트하는 것에 요구되지 않음.
+
+MFA Delete를 사용하기 위해, 버저닝은 버킷에서 가능하게 되어야 함.
+
+오직 그 버킷 소유자(root account)만이 MFA Delete를 가능하게하거나 불가능하게 할 수 있음.
+
+
+
+8. S3 Access Logs
+
+심사 목적을 위해 S3 버킷들에 대한 모든 접근을 로깅하기를 원할 수 있음.
+
+인증되고 거부된, 어떤 계정으로부터든, S3으로 만들어진 어떤 요청들도 다른 S3 버킷으로 로길될 것임.
+
+그 데이터는 데이터 분석 도구들을 사용해 분석될 수 있음.
+
+그 타킷 로깅 버킷은 반드시 같은 AWS 리전 내에 있어야 함.
+
+모니터링되는 버킷으로 로깅 버킷을 세팅하면 안됨. 그것은 로깅 루프를 만들어서 버킷이 기하급수적으로 자랄 것임.
+
+
+
+9. Amazon S3 - Pre-Signed URLs
+
+S3 콘솔, AWS CLI 혹은 SDK를 사용해서 pre-signed URL들을 생성함.
+
+pre-signed URL을 받은 사용자들은 GET/PUT을 위한 URL을 생성하는 유저의 권한을 상속함.
+
+
+
+10. S3 Glacier Vault Lock
+
+한번 쓰고 많이 읽는 모델을 채택함.
+
+Vauld Lock Policy를 생성함.
+
+미래의 편집을 위한 정책들을 잠금함. 더이상 변경하거나 삭제할 수 없음.
+
+규착 준수와 데이터 유지에 도움이 됨.
+
+
+
+11. S3 Object Lock(versioning must be enabled)
+
+한번 쓰고 여러번 읽는 모델을 채택함.
+
+특정한 시간에 대한 오브젝트 버전 삭제를 방지함.
+
+규칙 준수를 위한 유지 모드에서 오브젝트 버전들은 루트 사용자를 포함한 어떤 사용자에 의해서도 다시쓰여지거나 삭제될 수 없음. 그리고 오브젝트들 유지 모드들은 변경될 수 없고 유지 기간은 단축될 수 없음.
+
+운영을 위한 유지 모드에서 대부분의 사용자들은 그 오브젝트 버전을 다시 쓰거나 삭제할 수 없고 그것의 잠금 세팅을 변경할 수 없음. 그리고 몇몇 사용자들은 그 유지를 변경하거나 그 오브젝트를 삭제하기 위한 특별한 권한을 가짐.
+
+유지 기간은 연장될 수 없고 고정된 기간동한 오브젝트를 보호하는 것임.
+
+Legal Hold는 오브젝트를 무한히 보호하고 유지 기간으로부터 독립적임. 그리고 s3:PutObjectLegalHold IAM 권한들을 사용해 자유롭게 배치되고 제거될 수 있음.
+
+
+
+12. S3 - Access Points
+
+Access Points 는 S3 버킷들을 위한 보안 관리를 단순화함.
+
+각각의 접근 포인트들은 인터넷 오리진이나 VPC오리진 같은 그것의 DNS 이름을 가지고 하나의 접근 포인트 정책은 버킷 정책과 유사하게 보안을 관리함.
+
+VPC 오리진 - VPC 내로부터만 오직 접근 포인트를 접근 가능하게 정의할 수 있음. VPC 엔드포인트를 그 접근 포인트에 접근하기 위해 생성해야 함. 그 VPC 엔드포인트 정책은 그 타깃 버킷과 액세스 포인트에 대한 접근을 허용함.
+
+
+
+13. S3 Object Lambda
+
+콜러 어플리케이션에 의해 그것이 검색되기 전에 오브젝트를 변경하기 위한 AWS 람다 함수를 사용함.
+
+생성하는 S3 Access Point 와 S3 Object Lambda Access Points의 최상단에 오직 하나의 S3 버킷이 필요함.
+XML을 JSON으로 변환하는 것과 같은 데이터 포맷을 가로지르는 변경에 사용함.
+
