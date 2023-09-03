@@ -1,0 +1,153 @@
+아래는 Udemy의 Ultimate AWS Certified Solutions Architect Associate SAA-C03 강의내용 중 Section 15.
+
+163 - 170강을 요약한 내용입니다.(Section 15. CloudFront & AWS Global Accelerator)
+
+
+
+1. Amazon CloudFront
+
+컨텐츠 전달 네트워크임.
+
+읽기 성능을 향상시키고 콘텐츠는 엣지에 캐싱됨.
+
+사용자 경험을 향상시킴.
+
+전세계적으로 216 포인트들이 있음. (엣지 로케이션)
+
+DDos 보호, 쉴드 그리고 AWS 웹 어플리케이션 방화벽과의 통합.
+
+
+
+2. CloudFront - Origins
+
+S3 bucket - 파일들을 분산하고 그들을 엣지에 캐싱함. 클라우드프런트 Origin Access Control 과 함께 보안성을 향상함. OAC는 Origin Access Identity를 대체함. CloudFront는 통합으로서 사용될 수 있음.(파일들을 S3으로 업로드하기 위해)
+
+Custom Origin (HTTP) - 어플리케이션 로드 밸런서, EC2 인스턴스, S3 웹사이트(먼저 정적 S3 웹사이트로서 그 버킷을 가능하게 해야 함.), 딩신이 원하는 HTTP 백엔드 등임.
+
+
+
+3. CloudFront at a high level
+
+클라이언트가 요청하면 CloudFront Edge Location에서 로컬 캐시를 조회하거나 오리진 S3 버킷 또는 HTTP 백엔드로 요청함.
+
+
+
+4. CloudFront - S3 as an Origin
+
+Origin Access Control + S3 Bucket Policy 가 동작해 S3 버킷에 대한 요청을 Log Angeles, Mumbai, Sao Paulo, Melbourne 등의 엣지 로케이션으로 케싱함. 
+
+
+
+5. CloudFront vs S3 Cross Region Replication
+
+CloudFront - 글로벌 엣지 네트워크, TTL을 위해 파일들이 캐싱됨, 어디에서나 사용 가능해야 하는 정적 콘텐츠에 유용함.
+
+S3 Cross Region Replication - 복제가 일어나기를 원하는 각각의 리전마다 세팅해야 함. 거의 실시간으로 파일들이 업데이트됨. 읽기 전용임. 몇몇의 리전에서 낮은 지연으로 사용 가능할 필요가 있는 동적 컨텐츠에 유용함.
+
+
+
+6. CloudFront - ALB or EC2 as an origin
+
+사용1 - 퍼블릭 네트워크에 있는 EC2 인스턴스에 엣지 로케이션들의 퍼블릭 IP를 허용
+
+사용2 - 퍼블릭 네트워크에 있는 ALB에 엣지 로케이션들의 퍼블릭 IP를 허용하고 EC2 인스턴스에 ALB의 보안그룹을 허용
+
+
+
+7. CloudFront Geo Restriction
+
+분산에 대한 다른 사람들의 접근을 제어할 수 있음
+
+Allowlist - 승인된 국가들의 목록 중 하나인 경우에만 사용자들이 콘텐츠에 접근할 수 있게 함.
+
+Blocklist - 금지된 국가들의 목록 중 하나인 경우에는 사용자가 콘텐츠에 접근하는 것을 방지함.
+
+국가는 서드파티 Geo-IP 데이터베이스를 사용하면서 결정됨.
+
+컨텐츠에 대한 접근을 제어하기 위한 저작권 법 등에 사용됨.
+
+
+
+8. CloudFront - Pricing
+
+CloudFront Edge 로케이션들은 전세계에 걸쳐 있음.
+
+각각의 엣지 로케이션에서 데이터에 대한 비용은 다양함.
+
+
+
+9. CloudFront - Price Classes
+
+비용 절감을 위해 엣지 로케이션들의 수를 줄일 수 있음.
+
+Price Class All은 모든 리전들을 포함하고 가장 성능이 좋음.
+
+Price Class 200은 대부분의 리전들을 포함하지만, 가장 비싼 리전들을 제외함.
+
+Price Class 100은 가장 저렴한 리전들만 포함함.
+
+
+
+10. CloudFront - Cache Invalidations
+
+백엔드 오리진을 업데이트한 경우, 클라우드프런트는 그것에 대해 알지 못하고 TTL이 만료된 이후 리프레시된 컨텐츠만 가질 것임.
+
+그러나 클라우드프런트 무효화를 통해 전체 또는 부분 캐시를 리프레시 하도록 강제할 수 있음.
+
+모든 파일을 무효화하거나 특정 경로만 무효화할 수 있음.
+
+
+
+11. Global users for out application
+
+어플리케이션을 배포하고 그것에 직접 접근하기 원하는 전세계의 사용자들이 있음.
+
+그들은 퍼블릭 인터넷으로 넘어가고 그것은 많은 홉들로 인한 많은 지연을 추가함.
+
+우리는 지연을 최소화하기 위해 가능한 빨리 AWS 네트워크를 통해 가기를 원함.
+
+
+
+12. Unicase IP vs Anycast IP
+
+Unicast IP 는 하나의 서버가 하나의 IP를 들고 있는 것임.
+
+Anycast IP 는 모든 서버가 같은 주소를 들고 있고 클라이언트가 가장 가까운 곳으로 라우팅되는 것임.
+
+
+
+13. AWS Global Accelerator
+
+어플리케이션에 라우팅하는 AWS 내부 네트워크의 이점을 활용함.
+
+두개의 Anycast IP가 어플리케이션을 위해 생성됨.
+
+Anycast IP는 엣지 로케이션들로 직접 트래픽을 보냄.
+
+엣지 로케이션들은 트래픽을 어플리케이션으로 보냄.
+
+
+
+14. AWS Global Accelerator
+
+Elastic IP, EC2 Instances, ALB, NLB, public 또는 private 과 함께 동작함.
+
+일관된 성능 - 가장 낮은 지연과 빠른 지역 실패를 위해 지능적으로 라우팅함. 클라이언트 캐시에 대해 이슈 없음. AWS 내부 네트워크임.
+
+헬스 체크 - 글로벌 엑셀러레이턴,ㄴ 어플리케이션에서 헬스 체크를 수행함. 어플리케이션을 글로벌로 만드는 것을 도움. 재해 복구를 도움.
+
+보안 - 오직 두개의 화이트리스트에 등록된 외부 IP가 필요함. AWS 쉴드 덕에 DDoS 보호가 됨.
+
+
+
+15. AWS Global Accelerator vs CloudFront
+
+둘다 AWS Global 네트워크와 그것의 엣지 로케이션들을 전세계에 걸쳐 사용함.
+
+두 서비스 다 DDoS 보호를 위해 AWS Shield와 통합됨.
+
+CloudFront - 이미지나 비디오 같은 캐시 가능한 컨텐츠들에 대한 퍼포먼스를 향상시킴. API 가속기나 동적 사이트 전달 등 동적 컨텐츠를 사용, 컨텐츠들이 엣지에서 전달됨.
+
+Global Accelerator - TCP 또는 UDP 의 전 영역에 걸쳐서 성능을 향상시킴. 하나 혹은 그 이상의 AWS 리전들에서 실행되는 어플리케이션들에 대한 엣지에서 패킷들을 프록시함. UDP를 사용한 게이밍, MQTT를 사용한 IoT 등과 같은 HTTP가 아닌 경우에 사용 가능함. 정적 IP 주소들을 필요로하는 HTTP 사용에 좋음. 결정론적이거나 빠른 지역 실패를 요하는 HTTP에 좋음.
+
+
