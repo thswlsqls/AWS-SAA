@@ -1,0 +1,74 @@
+아래는 Udemy의 Ultimate AWS Certified Solutions Architect Associate SAA-C03 강의내용 중 Section 16.
+
+171 - 180강을 요약한 내용입니다.(Section 16. AWS Storage Extras)
+
+
+
+1. AWS Snow Family
+
+엣지에서 처리하는 데이터들을 모으고 AWS 외부로 전송하기에 유용하고 보안성이 높은 장치들임.
+
+Data migration: Snowcone, Snowball Edge, Snowmobile 
+
+Edge computing: Snowcone, Snowball Edge
+
+
+
+2. Data Migrations with AWS Snow Family
+
+제한된 연결, 제한된 대역폭, 높은 네트워크 비용, 공유된 대역폭, 연결 안정성 등의 도전과제들이 있음.
+
+AWS Snow Family는 데이터 마이그레이션을 수행하는 오프라인 장치듣임. 네트워크로 전송하는 것에 일주일 이상이 소요된다면 Snowball 장치들을 사용해야 함.
+
+예를 들어, 클라이언트가 S3 버킷으로 직접 데이터를 업로드한가면 초당 10기가바이트씩 전송할 것임. 이때, Snowball으로 client가 데이터를 옮겨놓고 이것을 배송하여 S3 버킷으로 impor/export한다면 그 속도가 더 빠를 수 있음.
+
+
+
+3. Snowball Edge (for data transfers)
+
+물리적 데이터 전송 솔루션: AWS 내외부로 TBs 또는 PBs를 옮김.
+
+네트워크 비용을 지불하고 네트워크로 데이터를 옮기는 것의 대안임.
+
+각각의 데이터 이동 작업마다 비용을 지불함.
+
+블록 스토리지와 Amazon S3와 호환 가능한 오브젝트 스토리지를 제공함.
+
+Snowball Edge Storage Optimized - 블록 볼륨에 대한 80TB 의 HDD 그리고 S3와 호환 가능한 오브젝트 스토리지.
+
+Snowball Edge Compute Optimized - 블록 볼륨에 대한 42TB 의 HDD 또는 28TB NVMe 그리고 S3와 호환 가능한 오브젝트 스토리지.
+
+사용례: 큰 데이터를 클라우드로 마이그레이션, DC 해체, 재해 복구 등등.
+
+
+
+4. AWS Snowcone & Snowcone SSD
+
+가혹한 환경에서 버티고 엄격하고 안전하며 어디서나 사용가능하고 작음.
+
+4.5파운드, 2.1kg으로 가벼움.
+
+엣지 컴퓨팅, 스토리지, 데이터 전송에 사용되는 장치임.
+
+Snowcone - 8TB 의 HDD 스토리지.
+
+Snowcone SSD - 14TB 의 SSD 스토리지.
+
+Snowball 이 공간 강제적인 환경에서 적합하지 않은 경우에 Snowcone을 사용함.
+
+배터리와 케이블이 제공되어야 함.
+
+AWS 오프라인으로 돌려 보내질 수 있고 그것을 인터넷에 연결하고 AWS DataSync를 사용해 데이터를 전송할 수 있음.
+
+
+
+5. AWS Snowmobile
+
+엑사바이트(1,000 PBs = 1,000,000 TBs)의 데이터 전송에 사용함.
+
+각각의 Snowmobile 은 100 PB의 용량을 가지고 병렬적으로 다수개를 사용함.
+
+온도 조절이 가능하고 GPS, 비디오 감시가 가능하는 등 보안성이 높음.
+
+10PB 이상의 데이터를 옮길 때, Snowball보다 좋음.
+
